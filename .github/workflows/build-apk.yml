@@ -37,21 +37,21 @@ jobs:
 
       - name: Create Cordova project
         run: |
-          cordova create cordova-app com.peralta.noteapp "Note App"
+          cordova create cordova-app com.peralta.tempconverter "Temperature Converter"
           cd cordova-app
           cordova platform add android
 
       - name: Copy app files into www
         run: |
           rm -rf cordova-app/www/*
-          cp index.html app.js cordova-app/www/
+          cp index.html cordova-app/www/
           test -f cordova-app/www/index.html || (echo "ERROR: index.html not found in repo root" && exit 1)
 
       # Put Ionic inside the app so it works even without internet
       - name: Bundle Ionic into the app
         run: |
-          npm pack @ionic/core@8.8.19
-          tar xzf ionic-core-8.8.19.tgz
+          npm pack @ionic/core@7.8.6
+          tar xzf ionic-core-7.8.6.tgz
           mkdir -p cordova-app/www/lib/ionic/css
           cp -r package/dist/ionic cordova-app/www/lib/ionic/dist
           cp package/css/ionic.bundle.css cordova-app/www/lib/ionic/css/
@@ -65,5 +65,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: note-app-apk
+          name: temperature-converter-apk
           path: cordova-app/platforms/android/app/build/outputs/apk/debug/app-debug.apk
