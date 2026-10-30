@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Note App</title>
+    <script>window.Ionic = { config: { mode: 'md' } };</script>
+    <!-- Ionic is bundled inside the app (www/lib) so it works even without internet -->
+    <link rel="stylesheet" href="lib/ionic/css/ionic.bundle.css" />
+    <script type="module" src="lib/ionic/dist/ionic.esm.js"></script>
+</head>
+<body>
+    <ion-app>
+        <ion-header>
+            <ion-toolbar>
+                <ion-title>Note App</ion-title>
+            </ion-toolbar>
+        </ion-header>
+
+        <ion-content class="ion-padding">
+            <ion-list id="notes">
+                <ion-item>
+                    <ion-input id="noteTitle" placeholder="Note title"></ion-input>
+                </ion-item>
+
+                <ion-item>
+                    <ion-textarea id="noteContent" placeholder="Note content" auto-grow="true"></ion-textarea>
+                </ion-item>
+            </ion-list>
+
+            <ion-button id="addNoteButton" expand="block">Add Note</ion-button>
+            <ion-button id="clearNotesButton" expand="block" fill="outline" color="danger">Clear Notes</ion-button>
+
+            <p id="statusMsg"></p>
+
+            <h3>Your Notes</h3>
+            <ion-list id="notesList"></ion-list>
+            <h3>Users</h3>
+            <ion-button id="loadUsersButton" fill="outline">Load Users</ion-button>
+            <p id="apiStatus"></p>
+            <ion-list id="userList"></ion-list>
+        </ion-content>
+    </ion-app>
+
+    <script src="cordova.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
