@@ -1,48 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Note App</title>
-    <script>window.Ionic = { config: { mode: 'md' } };</script>
-    <!-- Ionic is bundled inside the app (www/lib) so it works even without internet -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Temperature Converter</title>
+
+    <!-- Ionic is bundled inside the app (lib folder) so it works without internet -->
     <link rel="stylesheet" href="lib/ionic/css/ionic.bundle.css" />
     <script type="module" src="lib/ionic/dist/ionic.esm.js"></script>
+
+    <style>
+        .msg { color: var(--ion-color-danger); font-size: 13px; padding: 6px 4px; }
+    </style>
 </head>
 <body>
     <ion-app>
         <ion-header>
-            <ion-toolbar>
-                <ion-title>Note App</ion-title>
+            <ion-toolbar color="primary">
+                <ion-title>Temperature Converter</ion-title>
             </ion-toolbar>
         </ion-header>
 
         <ion-content class="ion-padding">
-            <ion-list id="notes">
-                <ion-item>
-                    <ion-input id="noteTitle" placeholder="Note title"></ion-input>
-                </ion-item>
-
-                <ion-item>
-                    <ion-textarea id="noteContent" placeholder="Note content" auto-grow="true"></ion-textarea>
-                </ion-item>
-            </ion-list>
-
-            <ion-button id="addNoteButton" expand="block">Add Note</ion-button>
-            <ion-button id="clearNotesButton" expand="block" fill="outline" color="danger">Clear Notes</ion-button>
-
-            <p id="statusMsg"></p>
-
-            <h3>Your Notes</h3>
-            <ion-list id="notesList"></ion-list>
-            <h3>Users</h3>
-            <ion-button id="loadUsersButton" fill="outline">Load Users</ion-button>
-            <p id="apiStatus"></p>
-            <ion-list id="userList"></ion-list>
+            <ion-item>
+                <ion-input id="txtValue" label="Temperature" label-placement="stacked"
+                    type="number" placeholder="Enter temperature"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-select id="selMode" label="Convert" label-placement="stacked" value="C-F">
+                    <ion-select-option value="C-F">Celsius to Fahrenheit</ion-select-option>
+                    <ion-select-option value="F-C">Fahrenheit to Celsius</ion-select-option>
+                    <ion-select-option value="C-K">Celsius to Kelvin</ion-select-option>
+                    <ion-select-option value="K-C">Kelvin to Celsius</ion-select-option>
+                    <ion-select-option value="F-K">Fahrenheit to Kelvin</ion-select-option>
+                    <ion-select-option value="K-F">Kelvin to Fahrenheit</ion-select-option>
+                </ion-select>
+            </ion-item>
+            <div id="msgBox" class="msg"></div>
+            <ion-button expand="block" onclick="convert()">Convert</ion-button>
+            <ion-button expand="block" fill="outline" color="medium" onclick="clearAll()">Clear</ion-button>
+            <ion-item>
+                <ion-label>
+                    <p>Result</p>
+                    <h2 id="lblAnswer">Result will appear here</h2>
+                </ion-label>
+            </ion-item>
         </ion-content>
     </ion-app>
+    <script>
+        var SYMBOLS = { C: "&deg;C", F: "&deg;F", K: "K" };
+        var PLACEHOLDER = "Result will appear here";
 
-    <script src="cordova.js"></script>
-    <script src="app.js"></script>
+        // Converts the entered temperature based on the selected mode
+        function convert() {
+            var input = document.getElementById("txtValue").value;
+            var mode = document.getElementById("selMode").value || "C-F";
+            var msgBox = document.getElementById("msgBox");
+            var temp = parseFloat(input);
+            msgBox.textContent = "";
+
+            if (isNaN(temp)) {
+                msgBox.textContent = "Please enter a valid number.";
+                document.getElementById("lblAnswer").textContent = PLACEHOLDER;
+                return;
+            }
+
+            var from = mode.split("-")[0];
+            var to = mode.split("-")[1];
+            // Step 1: turn the entered value into Celsius
+            var celsius = temp;
+            if (from === "F") {
+                celsius = (temp - 32) * 5 / 9;
+            } else if (from === "K") {
+                celsius = temp - 273.15;
+            }
+
+            // Step 2: turn that Celsius value into the chosen unit
+            var answer = celsius;
+            if (to === "F") {
+                answer = (celsius * 9 / 5) + 32;
+            } else if (to === "K") {
+                answer = celsius + 273.15;
+            }
+
+            document.getElementById("lblAnswer").innerHTML = answer.toFixed(2) + " " + SYMBOLS[to];
+        }
+
+        // Empties the form and resets the result back to its placeholder
+        function clearAll() {
+            document.getElementById("txtValue").value = "";
+            document.getElementById("selMode").value = "C-F";
+            document.getElementById("msgBox").textContent = "";
+            document.getElementById("lblAnswer").textContent = PLACEHOLDER;
+        }
+    </script>
 </body>
 </html>
